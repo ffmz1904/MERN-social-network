@@ -3,7 +3,8 @@ const postService = require('../services/postService');
 class PostController {
     async create(req, res, next) {
         try {
-            const post = await postService.create(req.body);
+            const userId = req.user.id;
+            const post = await postService.create(userId, req.body);
             res.status(200).json(post);
         } catch (e) {
             next(e);
@@ -13,7 +14,7 @@ class PostController {
     async update(req, res, next) {
         try {
             const { id } = req.params;
-            const { userId } = req.body;
+            const userId = req.user.id;
             const post = await postService.update(id, userId, req.body);
             res.status(200).json(post);
         } catch (e) {
@@ -24,7 +25,7 @@ class PostController {
     async remove(req, res, next) {
         try {
             const { id } = req.params;
-            const { userId } = req.body;
+            const userId = req.user.id;
             await postService.remove(id, userId);
             res.status(200).json({ success: true });
         } catch (e) {
@@ -35,7 +36,7 @@ class PostController {
     async like(req, res, next) {
         try {
             const { id } = req.params;
-            const { userId } = req.body;
+            const userId = req.user.id;
             await postService.likePost(id, userId);
             res.status(200).json({ success: true });
         } catch (e) {
@@ -55,7 +56,7 @@ class PostController {
 
     async getTimelinePosts(req, res, next) {
         try {
-            const { userId } = req.body;
+            const userId = req.user.id;
             const posts = await postService.getTimelinePosts(userId);
             res.status(200).json(posts);
         } catch (e) {

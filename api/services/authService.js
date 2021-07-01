@@ -86,12 +86,11 @@ class AuthService {
             isAdmin: user.isAdmin
         });
 
-        const { password, updatedAt, ...publicData } = user._doc;
         await tokenService.saveToken(user._id, tokens.refreshToken);
 
         return {
             ...tokens,
-            user: publicData
+            user
         }
     }
 }

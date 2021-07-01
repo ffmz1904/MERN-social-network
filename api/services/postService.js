@@ -3,12 +3,12 @@ const PostModel = require('../models/Post');
 const userService = require('./userService');
 
 class PostService {
-    async create(createData) {
-        if (!createData) {
-            throw ApiError.missingParams({ createData });
+    async create(userId, createData) {
+        if (!userId || !createData) {
+            throw ApiError.missingParams({ userId, createData });
         }
 
-        return PostModel.create({ ...createData });
+        return PostModel.create({ ...createData, userId });
     }
 
     async update(postId, userId, updateData) {
