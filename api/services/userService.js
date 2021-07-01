@@ -4,7 +4,7 @@ const UserModel = require('../models/User');
 
 class UserService {
     async updateUser(userId, updateData) {
-        if (!userId || updateData) {
+        if (!userId || !updateData) {
             throw ApiError.missingParams({ userId, updateData });
         }
 

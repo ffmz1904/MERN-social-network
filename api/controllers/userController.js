@@ -7,12 +7,12 @@ class UserController {
             const { id } = req.params;
             const { userId } = req.body;
 
-            if (id !== userId || !req.user.isAdmin) {
+            if (id === userId || req.user.isAdmin) {
+                const user = await userService.updateUser(id, req.body);
+                res.status(200).json(user);
+            } else {
                 throw ApiError.forbidden();
             }
-
-            const user = await userService.updateUser(id, req.body);
-            res.status(200).json(user);
         } catch (e) {
             next(e);
         }
