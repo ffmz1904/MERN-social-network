@@ -28,4 +28,8 @@ module.exports = class ApiError extends Error {
     static forbidden() {
         return new ApiError('Forbidden!', 403);
     }
+
+    static unauthorized() {
+        return new ApiError('Unauthorized!', 401);
+    }
 }
