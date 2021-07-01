@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const ApiError = require('../exception/apiError');
 const UserModel = require('../models/User');
+const tokenService = require('./tokenService');
 
 class AuthService {
     async registration(username, email, password) {
@@ -16,11 +17,21 @@ class AuthService {
 
         const hashPass = await bcrypt.hash(password, 5);
 
-        return UserModel.create({
+        const user = await UserModel.create({
            username,
            email,
            password: hashPass
         });
+
+        const tokens = tokenService.generateTokens({ id: user._id, email: user.email, isAdmin: user.isAdmin });
+        await tokenService.saveToken(user._id, tokens.refreshToken);
+
+        const { password: userPass, updatedAt, ...publicData } = user._doc;
+
+        return {
+            ...tokens,
+            user: publicData
+        }
     }
 
     async login(email, password) {
@@ -40,7 +51,15 @@ class AuthService {
             throw ApiError.badRequest('Bad password!');
         }
 
-        return user;
+        const tokens = tokenService.generateTokens({ id: user._id, email: user.email, isAdmin: user.isAdmin });
+        await tokenService.saveToken(user._id, tokens.refreshToken);
+
+        const { password: userPass, updatedAt, ...publicData } = user._doc;
+
+        return {
+            ...tokens,
+            user: publicData
+        }
     }
 }
 

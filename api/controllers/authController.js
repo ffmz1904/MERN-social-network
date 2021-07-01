@@ -4,8 +4,9 @@ class AuthController {
     async registration(req, res, next) {
        try {
            const { username, email, password } = req.body;
-           const user = await authService.registration(username, email, password);
-           res.status(200).json(user);
+           const authData = await authService.registration(username, email, password);
+           res.cookie('refreshToken', authData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
+           res.status(200).json(authData);
        } catch (e) {
            next(e);
        }
@@ -14,8 +15,9 @@ class AuthController {
     async login(req, res, next) {
         try {
             const { email, password } = req.body;
-            const user = await authService.login(email, password);
-            res.status(200).json(user);
+            const authData = await authService.login(email, password);
+            res.cookie('refreshToken', authData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true});
+            res.status(200).json(authData);
         } catch (e) {
             next(e);
         }
