@@ -4,5 +4,7 @@ const router = new Router();
 
 router.post('/registration', authController.registration);
 router.post('/login', authController.login);
+router.get('/logout', authController.logout);
+router.get('/refresh', authController.refresh);
 
 module.exports = router;

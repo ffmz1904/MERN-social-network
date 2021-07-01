@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const ApiError = require('../exception/apiError');
 const UserModel = require('../models/User');
 const tokenService = require('./tokenService');
+const userService = require('./userService');
 
 class AuthService {
     async registration(username, email, password) {
@@ -55,6 +56,38 @@ class AuthService {
         await tokenService.saveToken(user._id, tokens.refreshToken);
 
         const { password: userPass, updatedAt, ...publicData } = user._doc;
+
+        return {
+            ...tokens,
+            user: publicData
+        }
+    }
+
+    async logout(token) {
+        await tokenService.removeToken(token);
+    }
+
+    async refresh(refreshToken) {
+        if (!refreshToken) {
+            throw ApiError.unauthorized();
+        }
+
+        const userData = tokenService.validateRefreshToken(refreshToken);
+        const tokenFromDb = await tokenService.findToken(refreshToken);
+
+        if (!userData || !tokenFromDb) {
+            throw ApiError.unauthorized();
+        }
+
+        const user = await userService.getUserById(userData.id);
+        const tokens = tokenService.generateTokens({
+            id: user._id,
+            email: user.email,
+            isAdmin: user.isAdmin
+        });
+
+        const { password, updatedAt, ...publicData } = user._doc;
+        await tokenService.saveToken(user._id, tokens.refreshToken);
 
         return {
             ...tokens,

@@ -40,6 +40,14 @@ class TokenService {
 
         return TokenModel.create({ userId, refreshToken });
     }
+
+    async removeToken(refreshToken) {
+        return TokenModel.deleteOne({ refreshToken });
+    }
+
+    async findToken(refreshToken) {
+        return TokenModel.findOne({ refreshToken });
+    }
 }
 
 module.exports = new TokenService();
