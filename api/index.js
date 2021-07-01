@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const cors = require('cors');
 const apiRoutes = require('./routes/index');
 const errorHandler = require('./middleware/errorHandler');
 
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 app.use(helmet());
 app.use(morgan("common"));
 app.use('/api', apiRoutes);
