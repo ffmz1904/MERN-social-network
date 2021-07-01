@@ -16,4 +16,12 @@ module.exports = class ApiError extends Error {
         const message = 'Missing required function params!';
         return new ApiError(message, 400, errors);
     }
+
+    static alreadyExists(message) {
+        return new ApiError(message, 403);
+    }
+
+    static notFound(message) {
+        return new ApiError(message, 404);
+    }
 }

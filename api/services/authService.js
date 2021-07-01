@@ -11,7 +11,7 @@ class AuthService {
         const candidate = await UserModel.findOne({ email });
 
         if (candidate) {
-            throw ApiError.badRequest(`User with email ${email} already exists!`);
+            throw ApiError.alreadyExists(`User with email ${email} already exists!`);
         }
 
         const hashPass = await bcrypt.hash(password, 5);
@@ -31,7 +31,7 @@ class AuthService {
         const user = await UserModel.findOne({ email });
 
         if (!user) {
-            throw ApiError.badRequest(`Undefined user with email ${email}`);
+            throw ApiError.notFound(`User with email ${email} not found!`);
         }
 
         const comparePass = await bcrypt.compare(password, user.password);
