@@ -35,6 +35,10 @@ class UserService {
     }
 
     async follow(userId, followToId) {
+        if (!userId || !followToId) {
+            throw ApiError.missingParams({ userId, id: followToId });
+        }
+
         const currentUser = await UserModel.findById(userId);
         const userFollowTo = await UserModel.findById(followToId);
 
@@ -48,6 +52,26 @@ class UserService {
 
         await userFollowTo.updateOne({ $push: { followers: userId } });
         await currentUser.updateOne({ $push: { followings: followToId } });
+    }
+
+    async unfollow(userId, unfollowId) {
+        if (!userId || !unfollowId) {
+            throw ApiError.missingParams({ userId, id: unfollowId });
+        }
+
+        const currentUser = await UserModel.findById(userId);
+        const unfollowedUser = await UserModel.findById(unfollowId);
+
+        if (!currentUser || !unfollowedUser) {
+            throw ApiError.notFound(`User with id ${currentUser ? unfollowId : userId} not found!`);
+        }
+
+        if (!unfollowedUser.followers.includes(userId)) {
+            throw ApiError.alreadyExists('Already unfollowed!');
+        }
+
+        await unfollowedUser.updateOne({ $pull: { followers: userId } });
+        await currentUser.updateOne({ $pull: { followings: unfollowId } });
     }
 }
 

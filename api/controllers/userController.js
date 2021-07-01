@@ -63,9 +63,17 @@ class UserController {
         }
     }
 
-    async f(req, res, next) {
+    async unfollow(req, res, next) {
         try {
+            const { id } = req.params;
+            const { userId } = req.body;
 
+            if (id === userId) {
+                throw ApiError.forbidden();
+            }
+
+            await userService.unfollow(userId, id);
+            res.status(200).json({ success: true });
         } catch (e) {
             next(e);
         }

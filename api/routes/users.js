@@ -9,8 +9,8 @@ router.delete('/:id', userController.remove)
 //  get user
 router.get('/:id', userController.getUser);
 //  follow user
-
 router.put('/:id/follow', userController.follow);
 //  unfollow
+router.put('/:id/unfollow', userController.unfollow);
 
 module.exports = router;
