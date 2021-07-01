@@ -1,0 +1,7 @@
+.idea
+
+# api
+api/node_modules
+api/.env
+
+# client
