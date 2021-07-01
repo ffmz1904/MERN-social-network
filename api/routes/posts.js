@@ -9,8 +9,11 @@ router.post('/', postController.create);
 router.put('/:id', postController.update);
 //  Delete post
 router.delete('/:id', postController.remove);
-//  Like post
+//  Like || Dislike post
+router.put('/:id/like', postController.like);
 //  Get post
+router.get('/:id', postController.getOne);
 //  Get timeline posts
+router.get('/timeline/all', postController.getTimelinePosts);
 
 module.exports = router;

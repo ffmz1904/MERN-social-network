@@ -1,5 +1,6 @@
 const ApiError = require('../exception/apiError');
 const PostModel = require('../models/Post');
+const userService = require('./userService');
 
 class PostService {
     async create(createData) {
@@ -36,6 +37,40 @@ class PostService {
         }
 
         await post.deleteOne();
+    }
+
+    async likePost(postId, userId) {
+        if (!postId || !userId) {
+            throw ApiError.missingParams({ userId, id: postId });
+        }
+
+        const post = await PostModel.findById(postId);
+
+        if (!post.likes.includes(userId)) {
+            await post.updateOne({ $push: { likes: userId } });
+        } else {
+            await post.updateOne({ $pull: { likes: userId } });
+        }
+    }
+
+    async getPostById(postId) {
+        if (!postId) {
+            throw ApiError.missingParams({ id: postId });
+        }
+
+        return PostModel.findById(postId);
+    }
+
+    async getTimelinePosts(userId) {
+        if (!userId) {
+            throw ApiError.missingParams({ userId });
+        }
+
+        const currentUser = await userService.getUserById(userId);
+        const userPosts = await PostModel.find({ userId });
+        const friendPosts = await PostModel.find({ userId: { $in: currentUser.followings } });
+
+        return userPosts.concat(...friendPosts);
     }
 }
 
