@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const apiRoutes = require('./routes/index');
+const errorHandler = require('./middleware/errorHandler');
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
 app.use('/api', apiRoutes);
+app.use(errorHandler);
 
 (async () => {
    try {
