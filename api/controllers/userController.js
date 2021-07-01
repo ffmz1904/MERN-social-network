@@ -7,9 +7,28 @@ class UserController {
             const { id } = req.params;
             const { userId } = req.body;
 
-            if (id === userId || req.user.isAdmin) {
+            if (id === userId) {
                 const user = await userService.updateUser(id, req.body);
                 res.status(200).json(user);
+            } else {
+                throw ApiError.forbidden();
+            }
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async remove(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { userId } = req.body;
+
+            if (id === userId) {
+                const user = await userService.removeUser(id);
+                res.status(200).json({
+                    success: true,
+                    user
+                });
             } else {
                 throw ApiError.forbidden();
             }
@@ -25,7 +44,6 @@ class UserController {
             next(e);
         }
     }
-
 }
 
 module.exports = new UserController();

@@ -14,6 +14,14 @@ class UserService {
 
         return UserModel.findByIdAndUpdate(userId, { $set: updateData }, { new: true });
     }
+
+    async removeUser(userId) {
+        if (!userId) {
+            throw ApiError.missingParams({ userId });
+        }
+
+        return UserModel.findByIdAndDelete(userId);
+    }
 }
 
 module.exports = new UserService();
