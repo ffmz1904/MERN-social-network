@@ -7,12 +7,12 @@ class UserController {
             const { id } = req.params;
             const { userId } = req.body;
 
-            if (id === userId) {
-                const user = await userService.updateUser(id, req.body);
-                res.status(200).json(user);
-            } else {
+            if (id !== userId) {
                 throw ApiError.forbidden();
             }
+
+            const user = await userService.updateUser(id, req.body);
+            res.status(200).json(user);
         } catch (e) {
             next(e);
         }
@@ -23,15 +23,41 @@ class UserController {
             const { id } = req.params;
             const { userId } = req.body;
 
-            if (id === userId) {
-                const user = await userService.removeUser(id);
-                res.status(200).json({
-                    success: true,
-                    user
-                });
-            } else {
+            if (id !== userId) {
                 throw ApiError.forbidden();
             }
+
+            const user = await userService.removeUser(id);
+            res.status(200).json({
+                success: true,
+                user
+            });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async getUser(req, res, next) {
+        try {
+            const { id } = req.params;
+            const user = await userService.getUserById(id);
+            res.status(200).json(user);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async follow(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { userId } = req.body;
+
+            if (id === userId) {
+                throw ApiError.forbidden(); //can`t follow yourself!
+            }
+
+            await userService.follow(userId, id);
+            res.status(200).json({ success: true });
         } catch (e) {
             next(e);
         }
