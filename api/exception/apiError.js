@@ -24,4 +24,8 @@ module.exports = class ApiError extends Error {
     static notFound(message) {
         return new ApiError(message, 404);
     }
+
+    static forbidden() {
+        return new ApiError('Forbidden!', 403);
+    }
 }
