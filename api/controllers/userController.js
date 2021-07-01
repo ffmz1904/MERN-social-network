@@ -5,9 +5,9 @@ class UserController {
     async update(req, res, next) {
         try {
             const { id } = req.params;
-            const { userId } = req.body;
+            const { id: userId, isAdmin } = req.user;
 
-            if (id !== userId) {
+            if (id !== userId && !isAdmin) {
                 throw ApiError.forbidden();
             }
 
@@ -21,9 +21,9 @@ class UserController {
     async remove(req, res, next) {
         try {
             const { id } = req.params;
-            const { userId } = req.body;
+            const { id: userId, isAdmin } = req.user;
 
-            if (id !== userId) {
+            if (id !== userId && !isAdmin) {
                 throw ApiError.forbidden();
             }
 
@@ -50,7 +50,7 @@ class UserController {
     async follow(req, res, next) {
         try {
             const { id } = req.params;
-            const { userId } = req.body;
+            const userId = req.user.id;
 
             if (id === userId) {
                 throw ApiError.forbidden(); //can`t follow yourself!
@@ -66,7 +66,7 @@ class UserController {
     async unfollow(req, res, next) {
         try {
             const { id } = req.params;
-            const { userId } = req.body;
+            const userId = req.user.id;
 
             if (id === userId) {
                 throw ApiError.forbidden();
