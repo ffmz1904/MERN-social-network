@@ -1,11 +1,8 @@
+import Home from "./pages/Home/Home";
 
+const App = () => {
+  return <Home />;
 
-function App() {
-  return (
-    <div>
-      hello
-    </div>
-  );
 }
 
 export default App;
