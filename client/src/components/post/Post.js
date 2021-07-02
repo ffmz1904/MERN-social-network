@@ -1,32 +1,35 @@
 import './post.css';
 import { MoreVert } from '@material-ui/icons';
 
-const Post = () => {
+import { Users } from '../../tmpData';
+
+const Post = ({ post }) => {
+    const user = Users.filter(u => u.id === post.userId).shift();
     return (
         <div className="post">
             <div className="postWrapper">
                 <div className="postTop">
                     <div className="postTopLeft">
-                        <img className="postProfileImg" src="/assets/person/1.jpeg" alt="postProfileImg"/>
-                        <span className="postUserName">postUserName</span>
-                        <span className="postDate">5 min ago</span>
+                        <img className="postProfileImg" src={user.profilePicture} alt="postProfileImg"/>
+                        <span className="postUserName">{ user.username }</span>
+                        <span className="postDate">{ post.date }</span>
                     </div>
                     <div className="postTopRight">
                         <MoreVert />
                     </div>
                 </div>
                 <div className="postCenter">
-                    <span className="posText">first post</span>
-                    <img className="postImg" src="/assets/post/1.jpeg" alt=""/>
+                    <span className="posText">{ post?.desc }</span>
+                    <img className="postImg" src={ post?.photo } alt=""/>
                 </div>
                 <div className="postBottom">
                     <div className="postBottomLeft">
                         <img className="likeIcon" src="/assets/like.png" alt=""/>
                         <img className="likeIcon" src="/assets/heart.png" alt=""/>
-                        <span className="likeCounter">32 people like it</span>
+                        <span className="likeCounter">{ post.like } people like it</span>
                     </div>
                     <div className="postBottomRight">
-                        <span className="postCommentText">9 comments</span>
+                        <span className="postCommentText">{ post.comment } comments</span>
                     </div>
                 </div>
             </div>
